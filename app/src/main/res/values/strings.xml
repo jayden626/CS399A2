@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Anagram</string>
+    <string name="title">Urch Dance Anagram</string>
+    <string name="play">Play</string>
+    <string name="about">About</string>
+    <string name="title_activity_about">About</string>
+    <string name="dance">Picture of creator Keevan Dance</string>
+    <string name="urch">Picture of creator Jayden Urch</string>
+    <string name="danceAbout">This is Keevan Dance. He is cool guy</string>
+    <string name="urchAbout">This is Jayden Urch. He is cooler guy</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="easy">Easy</string>
+    <string name="medium">Medium</string>
+    <string name="hard">Hard</string>
+    <string name="correct">Correct</string>
+    <string name="incorrect">Incorrect</string>
+    <string name="total">Total</string>
+    <string name="menu">Menu</string>
+    <string name="results">Results</string>
+</resources>
