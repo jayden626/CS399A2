@@ -64,7 +64,7 @@
             android:text="@string/letters"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/typed"
+            android:id="@+id/letters"
             android:layout_weight="1" />
 
     </LinearLayout>
