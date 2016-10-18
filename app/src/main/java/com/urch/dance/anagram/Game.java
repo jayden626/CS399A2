@@ -24,7 +24,7 @@ public class Game extends AppCompatActivity {
 
         LinearLayout ll = (LinearLayout)findViewById(R.id.word_container);
         foundList = new ArrayList<String>();
-        foundAdapter = new ArrayAdapter<String>(this, R.layout.list_item, foundList);
+        foundAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, foundList);
         ListView lv = (ListView)findViewById(R.id.listview);
         lv.setAdapter(foundAdapter);
         Button sub = (Button)findViewById(R.id.submit);
