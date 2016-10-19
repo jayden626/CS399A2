@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -28,7 +30,7 @@ import java.util.TimerTask;
 import static com.urch.dance.anagram.R.string.found;
 import static com.urch.dance.anagram.R.string.letters;
 
-public class Game extends AppCompatActivity {
+public class Game extends Activity {
     ArrayList<String> foundList;
     ArrayAdapter<String> foundAdapter;
     ArrayList<Button> clickedButtons;
@@ -41,6 +43,9 @@ public class Game extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_game);
 
         LinearLayout ll = (LinearLayout) findViewById(R.id.word_container);
