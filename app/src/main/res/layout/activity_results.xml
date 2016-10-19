@@ -39,7 +39,6 @@
     <TextView
         android:layout_width="100dp"
         android:layout_height="65dp"
-        android:text="@string/about"
         android:id="@+id/correctNo"
         android:background="#AAFFAA"
         android:textColor="#000000"
@@ -65,7 +64,6 @@
     <TextView
         android:layout_width="100dp"
         android:layout_height="65dp"
-        android:text="@string/about"
         android:id="@+id/incorrectNo"
         android:background="#FFAAAA"
         android:textColor="#000000"
@@ -91,7 +89,6 @@
     <TextView
         android:layout_width="100dp"
         android:layout_height="65dp"
-        android:text="@string/about"
         android:id="@+id/totalNo"
         android:background="#AAEEFF"
         android:textColor="#000000"
@@ -110,6 +107,7 @@
         android:textSize="35sp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="0dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:onClick="title"/>
 
 </RelativeLayout>
