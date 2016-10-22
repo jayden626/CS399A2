@@ -62,10 +62,6 @@ public class Game extends Activity {
             b.setText(String.valueOf(i));
             b.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT));
             b.setId(i);
-            // b.setMaxWidth(1);
-            // b.setMaxHeight(1);
-            // b.setMinimumHeight(0);
-            // b.setMinimumWidth(0);
             b.setOnClickListener(new letterClick());
             ll.addView(b);
         }
@@ -73,7 +69,7 @@ public class Game extends Activity {
         incorrect = 0;
 
         timerText = (TextView) findViewById(R.id.timer);
-        timeRemaining = 3000;
+        timeRemaining = 15000;
         timer = new CountDownTimer(timeRemaining, 1000) {
 
             public void onTick(long millisUntilFinished) {
@@ -144,7 +140,7 @@ public class Game extends Activity {
                 //validation
                 /* if(word is valid){*/
                 timer.cancel();
-                timeRemaining += 5000;
+                timeRemaining += 3000;
                 timer = new CountDownTimer(timeRemaining, 1000) {
 
                     public void onTick(long millisUntilFinished) {
