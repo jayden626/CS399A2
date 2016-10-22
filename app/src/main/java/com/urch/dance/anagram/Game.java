@@ -23,10 +23,12 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.urch.dance.anagram.R.array.answers;
 import static com.urch.dance.anagram.R.string.found;
 import static com.urch.dance.anagram.R.string.letters;
 
@@ -49,6 +51,8 @@ public class Game extends Activity {
         setContentView(R.layout.activity_game);
 
         LinearLayout ll = (LinearLayout) findViewById(R.id.word_container);
+        String[] wordScrammbled = getResources().getStringArray(R.array.wordScrammbled);
+        Log.i("Scrammbled", wordScrammbled[0]);
         foundList = new ArrayList<String>();
         clickedButtons = new ArrayList<Button>();
         foundAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, foundList);
@@ -57,10 +61,12 @@ public class Game extends Activity {
         Button sub = (Button) findViewById(R.id.submit);
         sub.setOnClickListener(new submitClick());
         ArrayList<Button> letters = new ArrayList<Button>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < wordScrammbled.length; i++) {
             Button b = new Button(this);
-            b.setText(String.valueOf(i));
+            b.setText(String.valueOf(wordScrammbled[i]));
             b.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT));
+            b.setMinimumWidth(0);
+            b.setWidth(150);
             b.setId(i);
             b.setOnClickListener(new letterClick());
             ll.addView(b);
@@ -116,6 +122,7 @@ public class Game extends Activity {
             if (clickedButtons.size() > 0) {
                 int i = view.getId();
 
+                String[] answers = getResources().getStringArray(R.array.answers);
                 Button submit_word = (Button) findViewById(i);
                 LinearLayout fc = (LinearLayout) findViewById(R.id.found_container);
                 LinearLayout wc = (LinearLayout) findViewById(R.id.word_container);
@@ -126,39 +133,71 @@ public class Game extends Activity {
                     word += b.getText().toString();
                     fc.removeView(b);
                     wc.addView(b);
+                    Log.i("word", word);
                     b.setOnClickListener(new letterClick());
                 }
                 clickedButtons.clear();
-                /*for (int j = 0; j < fc.getChildCount(); j++) {
-                    View v = fc.getChildAt(i);
-                    if (v.getClass().isInstance(submit_word)) {
-                        Log.i("b", "isbutton");
-                        word += ((Button) v).getText().toString();
-                    }
-                    Log.i("b", "isbutton");
-                }*/
+
                 //validation
+                for (int k = 0; k < answers.length; k++) {
+                    Log.i("answer: ", word);
+                    Log.i("answer_array: ", answers[k]);
+                    int childCount = lv.getChildCount();
+                    Log.i("Count", Integer.toString(childCount));
+                    if (word.equals(answers[k])) {
+                        Log.i("Word is in the list", answers[k]);
+                        foundList.add(word);
+                        foundAdapter.notifyDataSetChanged();
+                        lv.setSelection(foundAdapter.getCount() - 1);
+                        if (childCount+1 == 5) {
+                            // no new words results screen
+                            Log.i("SOLVED", "QUIT");
+                            timer.cancel();
+                            timeRemaining = 0;
+                            timer = new CountDownTimer(timeRemaining, 1000) {
+
+                                public void onTick(long millisUntilFinished) {
+                                    timerText.setText(millisUntilFinished / 1000 + "s");
+                                }
+
+                                public void onFinish() {
+                                    Intent intent = new Intent(Game.this, Results.class);
+                                    intent.putExtra("correct", String.valueOf(foundList.size()));
+                                    intent.putExtra("incorrect", String.valueOf(incorrect));
+                                    intent.putExtra("total", String.valueOf(foundList.size() + incorrect));
+                                    startActivity(intent);
+                                }
+
+                            }.start();
+                        } else {
+                            timer.cancel();
+                            timeRemaining += 3000;
+                            timer = new CountDownTimer(timeRemaining, 1000) {
+
+                                public void onTick(long millisUntilFinished) {
+                                    timerText.setText(millisUntilFinished / 1000 + "s");
+                                }
+
+                                public void onFinish() {
+                                    Intent intent = new Intent(Game.this, Results.class);
+                                    intent.putExtra("correct", String.valueOf(foundList.size()));
+                                    intent.putExtra("incorrect", String.valueOf(incorrect+1));
+                                    intent.putExtra("total", String.valueOf(foundList.size() + incorrect+1));
+                                    startActivity(intent);
+                                }
+
+                            }.start();
+                        }
+                    } else if (k == answers.length-1) {
+                        if (!Arrays.asList(answers).contains(word)) {
+                            incorrect += 1;
+                            Log.i("Incorrect: ", Integer.toString(incorrect));
+                        }
+                    }
+
+                }
                 /* if(word is valid){*/
-                timer.cancel();
-                timeRemaining += 3000;
-                timer = new CountDownTimer(timeRemaining, 1000) {
 
-                    public void onTick(long millisUntilFinished) {
-                        timerText.setText(millisUntilFinished / 1000 + "s");
-                    }
-
-                    public void onFinish() {
-                        Intent intent = new Intent(Game.this, Results.class);
-                        intent.putExtra("correct", String.valueOf(foundList.size()));
-                        intent.putExtra("incorrect", String.valueOf(incorrect));
-                        intent.putExtra("total", String.valueOf(foundList.size() + incorrect));
-                        startActivity(intent);
-                    }
-
-                }.start();
-                foundList.add(word);
-                foundAdapter.notifyDataSetChanged();
-                lv.setSelection(foundAdapter.getCount() - 1);
                 //}
                 //else {
                 //incorrect++;
