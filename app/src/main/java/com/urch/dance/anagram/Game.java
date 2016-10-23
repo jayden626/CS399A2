@@ -40,7 +40,7 @@ public class Game extends Activity {
     CountDownTimer timer;
     int timeRemaining;
     int incorrect;
-    //CountdownActivity count;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class Game extends Activity {
 
         LinearLayout ll = (LinearLayout) findViewById(R.id.word_container);
         String[] wordScrammbled = getResources().getStringArray(R.array.wordScrammbled);
-        Log.i("Scrammbled", wordScrammbled[0]);
+
         foundList = new ArrayList<String>();
         clickedButtons = new ArrayList<Button>();
         foundAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, foundList);
@@ -75,7 +75,7 @@ public class Game extends Activity {
         incorrect = 0;
 
         timerText = (TextView) findViewById(R.id.timer);
-        timeRemaining = 15000;
+        timeRemaining = 30000;
         timer = new CountDownTimer(timeRemaining, 1000) {
 
             public void onTick(long millisUntilFinished) {
@@ -123,7 +123,7 @@ public class Game extends Activity {
                 int i = view.getId();
 
                 String[] answers = getResources().getStringArray(R.array.answers);
-                Button submit_word = (Button) findViewById(i);
+                //Button submit_word = (Button) findViewById(i);
                 LinearLayout fc = (LinearLayout) findViewById(R.id.found_container);
                 LinearLayout wc = (LinearLayout) findViewById(R.id.word_container);
                 ListView lv = (ListView) findViewById(R.id.listview);
@@ -133,27 +133,30 @@ public class Game extends Activity {
                     word += b.getText().toString();
                     fc.removeView(b);
                     wc.addView(b);
-                    Log.i("word", word);
                     b.setOnClickListener(new letterClick());
                 }
                 clickedButtons.clear();
 
+                boolean newWord = false;
                 //validation
                 for (int k = 0; k < answers.length; k++) {
-                    Log.i("answer: ", word);
-                    Log.i("answer_array: ", answers[k]);
-                    int childCount = lv.getChildCount();
-                    Log.i("Count", Integer.toString(childCount));
+
                     if (word.equals(answers[k])) {
-                        Log.i("Word is in the list", answers[k]);
-                        foundList.add(word);
-                        foundAdapter.notifyDataSetChanged();
-                        lv.setSelection(foundAdapter.getCount() - 1);
-                        if (childCount+1 == 5) {
-                            // no new words results screen
-                            Log.i("SOLVED", "QUIT");
+                        boolean alreadyIn = false;
+                        for(String s : foundList){
+                                if(s.equals(word)){
+                                    alreadyIn = true;
+                                    break;
+                                }
+                        }
+                        if(!alreadyIn) {
+                            newWord = true;
+                            foundList.add(word);
+                            foundAdapter.notifyDataSetChanged();
+                            lv.setSelection(foundAdapter.getCount() - 1);
+
                             timer.cancel();
-                            timeRemaining = 0;
+                            timeRemaining += 5000;
                             timer = new CountDownTimer(timeRemaining, 1000) {
 
                                 public void onTick(long millisUntilFinished) {
@@ -169,40 +172,14 @@ public class Game extends Activity {
                                 }
 
                             }.start();
-                        } else {
-                            timer.cancel();
-                            timeRemaining += 3000;
-                            timer = new CountDownTimer(timeRemaining, 1000) {
 
-                                public void onTick(long millisUntilFinished) {
-                                    timerText.setText(millisUntilFinished / 1000 + "s");
-                                }
-
-                                public void onFinish() {
-                                    Intent intent = new Intent(Game.this, Results.class);
-                                    intent.putExtra("correct", String.valueOf(foundList.size()));
-                                    intent.putExtra("incorrect", String.valueOf(incorrect+1));
-                                    intent.putExtra("total", String.valueOf(foundList.size() + incorrect+1));
-                                    startActivity(intent);
-                                }
-
-                            }.start();
-                        }
-                    } else if (k == answers.length-1) {
-                        if (!Arrays.asList(answers).contains(word)) {
-                            incorrect += 1;
-                            Log.i("Incorrect: ", Integer.toString(incorrect));
+                            break;
                         }
                     }
-
                 }
-                /* if(word is valid){*/
-
-                //}
-                //else {
-                //incorrect++;
-                //time -5 seconds? (5000ms)
-                //}
+                if(!newWord){
+                    incorrect += 1;
+                }
             }
         }
     }
